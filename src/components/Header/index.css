@@ -1,0 +1,29 @@
+.header-container {
+  background-color: #202020;
+  height: 10vh;
+  display: flex;
+  justify-content: space-around;
+}
+.logo-img {
+  margin-top: 8px;
+  height: 55px;
+  width: 150px;
+}
+.list-container {
+  display: flex;
+  margin-top: 10px;
+}
+.list-item {
+  display: flex;
+  margin-right: 20px;
+  color: #ffffff;
+}
+.logout-btn {
+  background-color: #4f46e5;
+  color: #ffffff;
+  align-self: center;
+  padding: 10px;
+  width: 100px;
+  border-radius: 8px;
+  border-width: 0px;
+}
