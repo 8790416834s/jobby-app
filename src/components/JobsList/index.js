@@ -21,7 +21,11 @@ const jobsList = props => {
     <Link to={`/jobs/${id}`}>
       <li className="jobs-card-container">
         <div className="job-container">
-          <img src={companyLogoUrl} alt="logo" className="company-logo" />
+          <img
+            src={companyLogoUrl}
+            alt="company logo"
+            className="company-logo"
+          />
           <div className="title-container">
             <h1>{title}</h1>
             <div className="rating-container">

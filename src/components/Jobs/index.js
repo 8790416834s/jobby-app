@@ -8,14 +8,21 @@ import Profile from '../Profile'
 import './index.css'
 import JobContext from '../../Context/JobContext'
 
+const apiConstants = {
+  success: 'SUCCESS',
+  failure: 'FAILURE',
+  inProgress: 'IN_PROGRESS',
+}
+
 class Jobs extends Component {
-  state = {blogsData: [], isLoading: true}
+  state = {blogsData: [], apiStatus: ''}
 
   componentDidMount() {
     this.getJobs()
   }
 
   getJobs = async () => {
+    this.setState({apiStatus: apiConstants.inProgress})
     const jwtToken = Cookies.get('jwt_token')
     const url = `https://apis.ccbp.in/jobs`
     const options = {
@@ -37,7 +44,9 @@ class Jobs extends Component {
         jobDescription: each.job_description,
         packagePerAnnum: each.package_per_annum,
       }))
-      this.setState({blogsData: updatedData, isLoading: false})
+      this.setState({blogsData: updatedData, apiStatus: apiConstants.success})
+    } else {
+      this.setState({apiStatus: apiConstants.failure})
     }
   }
 
@@ -50,7 +59,7 @@ class Jobs extends Component {
   }
 
   renderLoading = () => (
-    <div className="loader">
+    <div className="loader" data-testid="loader">
       <Loader type="ThreeDots" color="#ffffff" height={50} width={50} />
     </div>
   )
@@ -62,17 +71,19 @@ class Jobs extends Component {
         const {typeValue} = this.state
         return (
           <div className="type-section">
-            <p>Type of Employment</p>
+            <h1>Type of Employment</h1>
             <ul>
               {employmentTypesList.map(eachType => (
-                <li key={eachType.id} className="list-item">
+                <li key={eachType.employmentTypeId} className="list-item">
                   <input
                     type="checkbox"
-                    id={eachType.id}
+                    id={eachType.employmentTypeId}
                     value={typeValue}
                     onChange={this.onChangeCheckBox}
                   />
-                  <label htmlFor={eachType.id}>{eachType.label}</label>
+                  <label htmlFor={eachType.employmentTypeId}>
+                    {eachType.label}
+                  </label>
                 </li>
               ))}
             </ul>
@@ -87,21 +98,20 @@ class Jobs extends Component {
       {value => {
         const {salaryRangesList} = value
         const {rangeValue} = this.state
-        console.log(rangeValue)
         return (
           <div className="range-section">
-            <p>Salary Range</p>
+            <h1>Salary Range</h1>
             <ul>
               {salaryRangesList.map(each => (
-                <li key={each.id} className="list-item">
+                <li key={each.salaryRangeId} className="list-item">
                   <input
                     type="radio"
-                    id={each.id}
+                    id={each.salaryRangeId}
                     name="radio"
                     value={rangeValue}
                     onChange={this.onChangeRadio}
                   />
-                  <label htmlFor={each.id}>{each.label}</label>
+                  <label htmlFor={each.salaryRangeId}>{each.label}</label>
                 </li>
               ))}
             </ul>
@@ -111,9 +121,49 @@ class Jobs extends Component {
     </JobContext.Consumer>
   )
 
-  render() {
-    const {blogsData, isLoading} = this.state
+  renderSuccess = () => {
+    const {blogsData} = this.state
 
+    return (
+      <>
+        <ul className="jobs-list-container">
+          {blogsData.map(each => (
+            <JobsList key={each.id} jobDetails={each} />
+          ))}
+        </ul>
+      </>
+    )
+  }
+
+  renderFailure = () => (
+    <>
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/failure-img.png"
+        alt="failure view"
+      />
+      <h1>Oops! Something Went Wrong</h1>
+      <p>We cannot seem to find the page you are looking for.</p>
+      <button type="button" className="retry-btn">
+        Retry
+      </button>
+    </>
+  )
+
+  renderSwitch = () => {
+    const {apiStatus} = this.state
+    switch (apiStatus) {
+      case apiConstants.inProgress:
+        return this.renderLoading()
+      case apiConstants.failure:
+        return this.renderFailure()
+      case apiConstants.success:
+        return this.renderSuccess()
+      default:
+        return null
+    }
+  }
+
+  render() {
     return (
       <>
         <Header />
@@ -130,15 +180,7 @@ class Jobs extends Component {
               <input type="search" className="search-input" />
               <AiOutlineSearch className="search-img" />
             </div>
-            {isLoading ? (
-              this.renderLoading()
-            ) : (
-              <ul className="jobs-list-container">
-                {blogsData.map(each => (
-                  <JobsList key={each.id} jobDetails={each} />
-                ))}
-              </ul>
-            )}
+            {this.renderSwitch()}
           </div>
         </div>
       </>

@@ -1,0 +1,7 @@
+.similar-list-item {
+  display: flex;
+  flex-direction: column;
+}
+.similar-jobs-container {
+  display: flex;
+}

@@ -1,0 +1,25 @@
+.skill-container {
+  display: flex;
+  justify-content: space-around;
+}
+.skill-item {
+  display: flex;
+}
+.life-company-container {
+  display: flex;
+}
+.similar-container {
+  display: flex;
+  background-color: #202020;
+}
+.anchor-container {
+  display: flex;
+  justify-content: space-between;
+}
+.anchor {
+  display: flex;
+}
+.website-link {
+  margin-top: 20px;
+  margin-right: 10px;
+}

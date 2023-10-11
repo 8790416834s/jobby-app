@@ -40,7 +40,7 @@ class Login extends Component {
     if (response.ok === true) {
       this.onSuccess(data.jwt_token)
     } else {
-      this.onFailure(data.err_msg)
+      this.onFailure(data.error_msg)
     }
   }
 
@@ -49,7 +49,7 @@ class Login extends Component {
     return (
       <>
         <label htmlFor="username" className="label-username">
-          USER NAME
+          USERNAME
         </label>
         <input
           type="text"
@@ -101,7 +101,7 @@ class Login extends Component {
           <button type="submit" className="login-btn">
             Login
           </button>
-          <p className="error-msg">{showErrMsg ? errMsg : ''}</p>
+          {showErrMsg ? <p className="error-msg"> {errMsg}</p> : ''}
         </form>
       </div>
     )

@@ -14,3 +14,16 @@
   font-family: 'Roboto';
   color: #121212;
 }
+.profile-failure-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.retry-btn {
+  background-color: #4f46e5;
+  color: #ffffff;
+  border-width: 0px;
+  border-radius: 5px;
+  padding: 10px;
+}

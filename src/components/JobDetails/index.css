@@ -1,0 +1,17 @@
+.job-details-container {
+  background-color: #000000;
+  color: #ffffff;
+  height: 200vh;
+}
+.job-detail-container {
+  padding-top: 30px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 50px;
+}
+.failure-view-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

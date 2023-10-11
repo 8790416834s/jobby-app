@@ -1,10 +1,19 @@
 import {Component} from 'react'
 import Cookies from 'js-cookie'
+import Loader from 'react-loader-spinner'
 import './index.css'
 import JobDetailsItem from '../JobDetailsItem'
+import Header from '../Header'
+
+const apiConstants = {
+  initial: 'INITIAL',
+  inProgress: 'IN_PROGRESS',
+  success: 'SUCCESS',
+  failure: 'FAILURE',
+}
 
 class JobDetails extends Component {
-  state = {detailsItem: {}}
+  state = {detailsItem: {}, apiStatus: apiConstants.initial}
 
   componentDidMount() {
     this.getJobDetails()
@@ -45,6 +54,7 @@ class JobDetails extends Component {
   })
 
   getJobDetails = async () => {
+    this.setState({apiStatus: apiConstants.inProgress})
     const {match} = this.props
     const {params} = match
     const {id} = params
@@ -66,25 +76,65 @@ class JobDetails extends Component {
           this.formattedData(each),
         ),
       }
-      this.setState({detailsItem: updatedData})
+      this.setState({detailsItem: updatedData, apiStatus: apiConstants.success})
+    } else {
+      this.setState({apiStatus: apiConstants.failure})
     }
   }
 
-  renderDetailItem = () => {
+  onClickRetry = () => {
+    this.getJobDetails()
+  }
+
+  renderSuccess = () => {
     const {detailsItem} = this.state
-    const {jobDetails} = detailsItem
+    console.log(detailsItem)
     return (
-      <>
-        <JobDetailsItem jobItem={jobDetails} />
-      </>
+      <div className="job-detail-container">
+        <JobDetailsItem jobItem={detailsItem} />
+      </div>
     )
+  }
+
+  renderInProgress = () => (
+    <div className="loader" data-testid="loader">
+      <Loader type="ThreeDots" color="#ffffff" height={50} />
+    </div>
+  )
+
+  renderFailure = () => (
+    <div className="failure-view-container">
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/failure-img.png"
+        alt="failure view"
+      />
+      <h1>Oops! Something Went Wrong</h1>
+      <p>We cannot seem to find the page you are looking for.</p>
+      <button type="button" onClick={this.onClickRetry} className="retry-btn">
+        Retry
+      </button>
+    </div>
+  )
+
+  renderSwitchMethod = () => {
+    const {apiStatus} = this.state
+    switch (apiStatus) {
+      case apiConstants.inProgress:
+        return this.renderInProgress()
+      case apiConstants.failure:
+        return this.renderFailure()
+      case apiConstants.success:
+        return this.renderSuccess()
+      default:
+        return null
+    }
   }
 
   render() {
     return (
-      <div>
-        <h1>Details...</h1>
-        {this.renderDetailItem()}
+      <div className="job-details-container">
+        <Header />
+        {this.renderSwitchMethod()}
       </div>
     )
   }
